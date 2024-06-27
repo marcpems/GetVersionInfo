@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "GetVersionInfo (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "GetVersionInfo (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
