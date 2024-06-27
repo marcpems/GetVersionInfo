@@ -1,6 +1,7 @@
 using Microsoft.UI.Xaml;
 using System.Runtime.InteropServices;
 using System;
+using System.Reflection.PortableExecutable;
 
 
 namespace GetVersionInfo
@@ -42,10 +43,7 @@ namespace GetVersionInfo
 
         private void myButton_Click(object sender, RoutedEventArgs e)
         {
-            
             myButton.Content = GetWaRunningArchitecture();
-//            myButton.Content = GetRunningArchitecture();
-//            myButton.Content = System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture.ToString();
         }
 
         public static string GetWaRunningArchitecture()
@@ -72,45 +70,38 @@ namespace GetVersionInfo
                 machine = processInfo.ProcessMachine;
             }
 
+            return nativeMachine switch
+            {
+                // IMAGE_FILE_MACHINE_ARM64
+                0xAA64 when machine == 0x8664 => "EmulatedX64",
+                0xAA64 when machine == 0xAA64 => "NativeArm64",
+                0xAA64 when machine == 0x014C => "EmulatedX86",
+                // IMAGE_FILE_MACHINE_AMD64
+                0x8664 when machine == 0x8664 => "NativeX64",
+                _ => "Unknown",
+            };
+        }
 
-            System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture.ToString();
-            var machineArch = System.Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE");
+        public static string GetRunningArchitecture()
+        {
 
             switch (System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture)
             {
                 case Architecture.Arm64:
                     return "NativeArm64";
                 case Architecture.X64:
-                    if (machine == 0x8664)
+                    if (System.Runtime.InteropServices.RuntimeInformation.OSArchitecture != Architecture.X64)
                         return "EmulatedX64";
                     return "NativeX64";
-                default: return "Unknown";
+
+                default: return $"Unknown ({System.Runtime.InteropServices.RuntimeInformation.OSArchitecture}, {System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture}";
             }
 
-            //return nativeMachine switch
-            //{
-            //    // IMAGE_FILE_MACHINE_ARM64
-            //    0xAA64 when machine == 0x8664 => "EmulatedX64",
-            //    0xAA64 when machine == 0xAA64 => "NativeArm64",
-            //    0xAA64 when machine == 0x014C => "EmulatedX86",
-            //    // IMAGE_FILE_MACHINE_AMD64
-            //    0x8664 when machine == 0x8664 => "NativeX64",
-            //    _ => "Unknown",
-            //};
         }
 
-        public static string GetRunningArchitecture()
+        private void myButton2_Click(object sender, RoutedEventArgs e)
         {
-
-            //ProcessorArchitecture.GetArchitecture(out var arch); 
-            //arch.ToString();
-#if ARM64
-            return "NativeArm64";
-#elif X64
-            return "NativeX64";
-#else
-            return "Unknown";
-#endif
+            myButton2.Content = GetRunningArchitecture();
         }
     }
 }

@@ -9,6 +9,7 @@
     mc:Ignorable="d">
 
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
+        <Button x:Name="myButton" Click="myButton_Click">Original Version Info</Button>
+        <Button x:Name="myButton2" Click="myButton2_Click">OTHER Version Info</Button>
     </StackPanel>
 </Window>
